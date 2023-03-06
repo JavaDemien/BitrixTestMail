@@ -11,6 +11,9 @@ if(!defined("B_PROLOG_INCLUDED")||B_PROLOG_INCLUDED!==true)die();
  * @global CUser $USER
  */
 
+// подключение API Bitrix
+require_once($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/main/include/prolog_before.php");
+
 $arResult["PARAMS_HASH"] = md5(serialize($arParams).$this->GetTemplateName());
 
 $arParams["USE_CAPTCHA"] = (($arParams["USE_CAPTCHA"] != "N" && !$USER->IsAuthorized()) ? "Y" : "N");
@@ -60,6 +63,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["submit"] <> '' && (!isset($_P
 				"AUTHOR_GOODS" => implode(', ', $_POST["user_goods"]),
 				"EMAIL_TO" => $arParams["EMAIL_TO"],
 			);
+
+			$connection = Bitrix\Main\Application::getConnection();
+			$sqlHelper = $connection->getSqlHelper();
+
+			$sql = "INSERT INTO b_chosen_goods(`email`, `goods`, `send_date`)  VALUES ('".$sqlHelper->forSql($arFields["AUTHOR_EMAIL"], 100)."', '".$sqlHelper->forSql($arFields["AUTHOR_GOODS"])."', NOW())";
+
+			$connection->queryExecute($sql);
+
 			if(!empty($arParams["EVENT_MESSAGE_ID"]))
 			{
 				foreach($arParams["EVENT_MESSAGE_ID"] as $v)
@@ -78,7 +89,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["submit"] <> '' && (!isset($_P
 		$arResult["MESSAGE"] = htmlspecialcharsbx($_POST["MESSAGE"]);
 		$arResult["AUTHOR_NAME"] = htmlspecialcharsbx($_POST["user_name"]);
 		$arResult["AUTHOR_EMAIL"] = htmlspecialcharsbx($_POST["user_email"]);
-		$arResult["AUTHOR_GOODS"] = htmlspecialcharsbx($_POST["user_goods"]);
+		$arResult["AUTHOR_GOODS"] = htmlspecialcharsbx(implode(', ', $_POST["user_goods"]));
 	}
 	else
 		$arResult["ERROR_MESSAGE"][] = GetMessage("MF_SESS_EXP");

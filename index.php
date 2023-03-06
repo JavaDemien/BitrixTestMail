@@ -1,6 +1,6 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
-$APPLICATION->SetTitle("Тестоое задание Bitrix");
+$APPLICATION->SetTitle("Тестовое задание Bitrix");
 ?>
 
 <h1 class="container mt-2">Тестовое задание Bitrix</h1>
@@ -11,9 +11,10 @@ $APPLICATION->SetTitle("Тестоое задание Bitrix");
 	Array(
 		"EMAIL_TO" => "javademien@gmail.com",
 		"EVENT_MESSAGE_ID" => array(),
-		"OK_TEXT" => "Спасибо, ваше сообщение принято.",
+		"OK_TEXT" => "Спасибо, ваш заказ принят в обработку.",
 		"REQUIRED_FIELDS" => array("EMAIL", "GOODS", "GOOD1", "GOOD2", "GOOD3"),
-		"USE_CAPTCHA" => "N"
+		"USE_CAPTCHA" => "N",
+		"AJAX_MODE" => "Y"
 	)
 );?><?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/footer.php');
